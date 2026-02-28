@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>TheCodeSpark — Certificate of Excellence</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Great+Vibes&family=Montserrat:wght@300;400;500;600;700;800&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Orbitron:wght@600;800&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --gold:#d4a843;--gold2:#c49030;--gold3:#f0c860;--gold4:#8a6010;
+      --navy:#1a1f35;--navy2:#141828;--navy3:#0e1220;--navy4:#222840;
+      --bg:#0a0d18;--text:#e8e0d0;--text2:#9a9090;
+      --green:#00e676;--red:#ff5555;
+    }
+    body{
+      font-family:'Montserrat',sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      min-height:100vh;
+      overflow-x:hidden;
+      -webkit-tap-highlight-color:transparent;
+      -webkit-touch-callout:none;
+      -webkit-user-select:none;
+      -khtml-user-select:none;
+      -moz-user-select:none;
+      -ms-user-select:none;
+      user-select:none;
+    }
+    input, select, textarea {
+      -webkit-user-select:auto;
+      -khtml-user-select:auto;
+      -moz-user-select:auto;
+      -ms-user-select:auto;
+      user-select:auto;
+    }
+
+    #starCanvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;}
+    .orb{position:fixed;border-radius:50%;filter:blur(90px);pointer-events:none;z-index:0;animation:orbF 12s ease-in-out infinite;}
+    .o1{width:500px;height:500px;background:rgba(212,168,67,0.05);top:-150px;left:-150px;}
+    .o2{width:400px;height:400px;background:rgba(26,31,53,0.3);bottom:-100px;right:-100px;animation-delay:5s;}
+    @keyframes orbF{0%,100%{transform:translate(0,0);}50%{transform:translate(25px,-25px);}}
+
+    .page{display:none;min-height:100vh;position:relative;z-index:1;}
+    .page.active{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;}
+
+    @keyframes riseIn{from{opacity:0;transform:translateY(36px) scale(.97);}to{opacity:1;transform:none;}}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:none;}}
+
+    .reg-wrap{width:100%;max-width:520px;animation:riseIn .9s cubic-bezier(.16,1,.3,1) both;}
+    .reg-hero{text-align:center;margin-bottom:32px;}
+    .reg-badge-row{display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:18px;}
+    .reg-hex{
+      width:58px;height:58px;
+      background:linear-gradient(135deg,var(--gold3),var(--gold),var(--gold4));
+      clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
+      display:flex;align-items:center;justify-content:center;
+      font-size:1.8rem;
+      box-shadow:0 0 30px rgba(212,168,67,.5);
+      animation:hexGlow 3s ease-in-out infinite;
+    }
+    @keyframes hexGlow{0%,100%{box-shadow:0 0 30px rgba(212,168,67,.5);}50%{box-shadow:0 0 60px rgba(212,168,67,.9),0 0 100px rgba(212,168,67,.3);}}
+    .reg-brand{text-align:left;}
+    .reg-brand-name{font-family:'Orbitron',sans-serif;font-size:1.15rem;font-weight:800;color:var(--gold);letter-spacing:1px;}
+    .reg-brand-sub{font-size:.65rem;color:var(--text2);letter-spacing:2.5px;text-transform:uppercase;margin-top:3px;}
+
+    .reg-title{font-family:'Cinzel',serif;font-size:clamp(1.4rem,4vw,2rem);font-weight:900;color:#fff;letter-spacing:4px;text-transform:uppercase;}
+    .reg-title span{color:var(--gold);}
+    .reg-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.1rem;color:var(--text2);margin-top:6px;}
+
+    .gold-line{display:flex;align-items:center;gap:10px;margin:16px auto;width:80%;}
+    .gold-line::before,.gold-line::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(212,168,67,.5),transparent);}
+    .gold-line-gem{width:7px;height:7px;background:var(--gold);transform:rotate(45deg);}
+
+    .form-card{
+      background:linear-gradient(160deg,rgba(20,24,40,.97) 0%,rgba(14,18,32,.97) 100%);
+      border:1px solid rgba(212,168,67,.2);border-radius:18px;
+      padding:36px 34px 40px;position:relative;overflow:hidden;
+      box-shadow:0 0 0 1px rgba(212,168,67,.06),0 24px 70px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,255,255,.04);
+    }
+    .form-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold3),var(--gold),transparent);}
+    .form-card::after{content:'';position:absolute;bottom:0;right:0;width:120px;height:120px;background:radial-gradient(circle at bottom right,rgba(212,168,67,.07),transparent 70%);}
+
+    .fc-header{text-align:center;margin-bottom:26px;}
+    .fc-steps{display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:8px;}
+    .fc-step{width:30px;height:30px;border-radius:50%;border:1px solid rgba(212,168,67,.35);display:flex;align-items:center;justify-content:center;font-family:'Orbitron',sans-serif;font-size:.6rem;font-weight:800;color:var(--text2);transition:all .3s;}
+    .fc-step.on{border-color:var(--gold);color:var(--gold);background:rgba(212,168,67,.1);box-shadow:0 0 14px rgba(212,168,67,.3);}
+    .fc-step-line{flex:1;max-width:44px;height:1px;background:rgba(212,168,67,.2);}
+    .fc-title{font-family:'Cinzel',serif;font-size:.95rem;color:var(--gold);letter-spacing:3px;text-transform:uppercase;margin-top:10px;}
+
+    .field{margin-bottom:16px;}
+    .field label{display:flex;align-items:center;gap:6px;font-size:.7rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text2);margin-bottom:8px;}
+    .field input,.field select{
+      width:100%;padding:13px 16px;
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(212,168,67,.18);border-radius:10px;
+      color:var(--text);font-family:'Montserrat',sans-serif;font-size:.95rem;font-weight:500;
+      transition:all .3s;
+    }
+    .field input:focus,.field select:focus{outline:none;border-color:var(--gold);background:rgba(212,168,67,.04);box-shadow:0 0 0 3px rgba(212,168,67,.1);}
+    .field input::placeholder{color:rgba(154,144,144,.45);}
+    .field select option{background:#0e1220;color:var(--text);}
+    .field-row{display:grid;grid-template-columns:110px 1fr;gap:12px;}
+
+    .btn-start{
+      width:100%;padding:15px;margin-top:10px;
+      background:linear-gradient(135deg,#f0c860 0%,#d4a843 45%,#8a6010 100%);
+      border:none;border-radius:10px;color:#0a0800;
+      font-family:'Orbitron',sans-serif;font-size:.78rem;font-weight:800;letter-spacing:3px;
+      cursor:pointer;transition:all .3s;text-transform:uppercase;position:relative;overflow:hidden;
+      box-shadow:0 4px 24px rgba(212,168,67,.35);
+    }
+    .btn-start::after{content:'';position:absolute;top:50%;left:-100%;width:60%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.25),transparent);transform:translateY(-50%);transition:left .5s;}
+    .btn-start:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(212,168,67,.55);}
+    .btn-start:hover::after{left:160%;}
+    .btn-start:active{transform:translateY(0);}
+
+    .reg-pills{display:flex;justify-content:center;gap:16px;margin-top:18px;flex-wrap:wrap;}
+    .pill{display:flex;align-items:center;gap:5px;font-size:.62rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--text2);}
+    .pill::before{content:'';width:4px;height:4px;border-radius:50%;background:var(--gold);opacity:.8;}
+
+    .quiz-wrap{width:100%;max-width:720px;animation:fadeUp .5s ease;}
+    .quiz-bar{display:flex;justify-content:space-between;align-items:center;padding:14px 22px;background:rgba(14,18,32,.9);border:1px solid rgba(212,168,67,.18);border-radius:14px;margin-bottom:14px;backdrop-filter:blur(10px);}
+    .qb-info{font-family:'Orbitron',sans-serif;font-size:.72rem;color:var(--text2);letter-spacing:1px;}
+    .qb-info span{color:var(--gold);font-weight:800;}
+    .qb-score{background:rgba(212,168,67,.1);border:1px solid rgba(212,168,67,.3);border-radius:20px;padding:5px 14px;font-family:'Orbitron',sans-serif;font-size:.72rem;color:var(--gold);font-weight:700;}
+    .prog-track{height:4px;background:rgba(255,255,255,.06);border-radius:2px;margin-bottom:18px;overflow:hidden;}
+    .prog-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--gold4),var(--gold),var(--gold3));transition:width .6s cubic-bezier(.4,0,.2,1);box-shadow:0 0 8px rgba(212,168,67,.7);}
+    .q-card{background:linear-gradient(145deg,rgba(13,16,28,.97),rgba(15,19,33,.97));border:1px solid rgba(212,168,67,.18);border-radius:18px;padding:36px 36px 28px;box-shadow:0 20px 60px rgba(0,0,0,.5);position:relative;overflow:hidden;}
+    .q-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);}
+    .q-num-label{font-family:'Orbitron',sans-serif;font-size:.62rem;color:var(--gold);letter-spacing:3px;margin-bottom:14px;opacity:.8;}
+    .q-text{font-family:'Cormorant Garamond',serif;font-size:1.5rem;line-height:1.65;color:var(--text);margin-bottom:28px;font-weight:600;}
+    .opts{display:flex;flex-direction:column;gap:10px;}
+    .opt{padding:13px 18px;background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.08);border-radius:10px;cursor:pointer;display:flex;align-items:center;gap:14px;font-family:'Montserrat',sans-serif;font-size:.92rem;font-weight:500;color:rgba(232,224,208,.85);transition:all .22s cubic-bezier(.4,0,.2,1);text-align:left;width:100%;}
+    .opt-ltr{width:30px;height:30px;border-radius:8px;flex-shrink:0;border:1px solid rgba(212,168,67,.35);display:flex;align-items:center;justify-content:center;font-family:'Orbitron',sans-serif;font-size:.62rem;font-weight:800;color:var(--gold);transition:all .22s;}
+    .opt:hover:not(:disabled){border-color:rgba(212,168,67,.5);background:rgba(212,168,67,.07);color:var(--text);transform:translateX(5px);}
+    .opt:hover:not(:disabled) .opt-ltr{background:var(--gold);color:#0a0800;border-color:var(--gold);}
+    .opt.correct{border-color:var(--green);background:rgba(0,230,118,.09);color:var(--green);}
+    .opt.correct .opt-ltr{background:var(--green);border-color:var(--green);color:#001a0a;}
+    .opt.wrong{border-color:var(--red);background:rgba(255,85,85,.09);color:var(--red);}
+    .opt.wrong .opt-ltr{background:var(--red);border-color:var(--red);color:#fff;}
+    .opt:disabled{cursor:default;transform:none!important;}
+    .next-btn{margin-top:22px;float:right;padding:11px 32px;background:linear-gradient(135deg,var(--gold3),var(--gold2));border:none;border-radius:8px;color:#0a0800;font-family:'Orbitron',sans-serif;font-size:.68rem;font-weight:800;letter-spacing:2px;cursor:pointer;transition:all .3s;}
+    .next-btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(212,168,67,.4);}
+
+    .res-wrap{max-width:500px;width:100%;text-align:center;animation:fadeUp .6s ease;}
+    .res-card{background:linear-gradient(145deg,rgba(13,16,28,.97),rgba(15,19,33,.97));border:1px solid rgba(212,168,67,.25);border-radius:20px;padding:48px 36px;position:relative;overflow:hidden;box-shadow:0 20px 80px rgba(0,0,0,.6);}
+    .res-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold3),var(--gold),transparent);}
+    .ring-wrap{position:relative;width:160px;height:160px;margin:0 auto 28px;}
+    .ring-svg{position:absolute;top:0;left:0;transform:rotate(-90deg);}
+    .ring-inner{position:absolute;inset:12px;border-radius:50%;background:rgba(212,168,67,.06);display:flex;flex-direction:column;align-items:center;justify-content:center;border:1px solid rgba(212,168,67,.15);}
+    .ring-num{font-family:'Orbitron',sans-serif;font-size:2.6rem;font-weight:800;color:var(--gold);line-height:1;}
+    .ring-den{font-size:.8rem;color:var(--text2);margin-top:2px;font-weight:600;}
+    .res-title{font-family:'Cinzel',serif;font-size:1.8rem;color:var(--gold);margin-bottom:10px;}
+    .res-msg{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-style:italic;color:var(--text2);line-height:1.6;margin-bottom:6px;}
+    .res-stats{display:flex;justify-content:center;gap:28px;margin:18px 0 28px;padding:16px;background:rgba(212,168,67,.04);border-radius:12px;border:1px solid rgba(212,168,67,.1);}
+    .stat-v{font-family:'Orbitron',sans-serif;font-size:1.2rem;color:var(--gold);font-weight:800;}
+    .stat-l{font-size:.62rem;color:var(--text2);letter-spacing:1px;text-transform:uppercase;margin-top:2px;}
+    .res-btns{display:flex;gap:12px;}
+    .btn-outline2{flex:1;padding:13px;background:transparent;border:1px solid rgba(212,168,67,.4);border-radius:10px;color:var(--gold);font-family:'Orbitron',sans-serif;font-size:.62rem;font-weight:800;letter-spacing:2px;cursor:pointer;transition:all .3s;text-transform:uppercase;}
+    .btn-outline2:hover{background:rgba(212,168,67,.09);border-color:var(--gold);}
+
+    /* ========= CERTIFICATE PAGE ========= */
+    #certPage.active{background:radial-gradient(ellipse at center,#0d1020 0%,#060810 100%);}
+    .cert-toolbar{display:flex;gap:12px;margin-bottom:28px;flex-wrap:wrap;justify-content:center;}
+    .ctb{padding:10px 24px;border-radius:8px;font-family:'Orbitron',sans-serif;font-size:.62rem;font-weight:800;letter-spacing:2px;cursor:pointer;transition:all .3s;text-transform:uppercase;border:none;}
+    .ctb-gold{background:linear-gradient(135deg,var(--gold3),var(--gold2));color:#0a0800;}
+    .ctb-gold:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(212,168,67,.4);}
+    .ctb-out{background:transparent;border:1px solid rgba(212,168,67,.5);color:var(--gold);}
+    .ctb-out:hover{background:rgba(212,168,67,.08);}
+
+    /* ========= CERTIFICATE — FONTS BADE KAR DIE ========= */
+    .certificate{width:100%;max-width:1020px;aspect-ratio:1.42/1;position:relative;overflow:hidden;box-shadow:0 0 0 2px rgba(212,168,67,.5),0 0 0 5px rgba(0,0,0,.9),0 0 0 7px rgba(212,168,67,.25),0 40px 120px rgba(0,0,0,.9);border-radius:3px;}
+    .c-base{position:absolute;inset:0;background:linear-gradient(135deg,#1c2240 0%,#141828 35%,#0e1220 60%,#181c34 100%);}
+    .c-panel-tl{position:absolute;top:0;left:0;width:0;height:0;border-left:clamp(140px,22vw,240px) solid #141c38;border-bottom:clamp(300px,48vw,520px) solid transparent;}
+    .c-panel-tl2{position:absolute;top:0;left:0;width:0;height:0;border-left:clamp(100px,16vw,175px) solid #101730;border-bottom:clamp(230px,36vw,400px) solid transparent;}
+    .c-panel-tl3{position:absolute;top:0;left:0;width:0;height:0;border-left:clamp(60px,10vw,110px) solid #0d1428;border-bottom:clamp(160px,25vw,280px) solid transparent;}
+    .c-panel-br{position:absolute;bottom:0;right:0;width:0;height:0;border-right:clamp(140px,22vw,240px) solid #141c38;border-top:clamp(300px,48vw,520px) solid transparent;}
+    .c-panel-br2{position:absolute;bottom:0;right:0;width:0;height:0;border-right:clamp(100px,16vw,175px) solid #101730;border-top:clamp(230px,36vw,400px) solid transparent;}
+    .c-panel-br3{position:absolute;bottom:0;right:0;width:0;height:0;border-right:clamp(60px,10vw,110px) solid #0d1428;border-top:clamp(160px,25vw,280px) solid transparent;}
+    .c-dots-tr,.c-dots-bl{position:absolute;width:clamp(160px,28vw,300px);height:clamp(160px,28vw,300px);overflow:hidden;}
+    .c-dots-tr{top:0;right:0;}
+    .c-dots-bl{bottom:0;left:0;}
+    .dots-svg{width:100%;height:100%;}
+    .c-border{position:absolute;inset:clamp(10px,1.5%,18px);border:1.5px solid rgba(212,168,67,.5);}
+    .c-border2{position:absolute;inset:clamp(14px,2%,24px);border:.5px solid rgba(212,168,67,.2);}
+    .c-topline{position:absolute;top:clamp(80px,14%,140px);left:clamp(18px,3%,32px);right:clamp(18px,3%,32px);height:1px;background:linear-gradient(90deg,transparent,rgba(212,168,67,.5),rgba(212,168,67,.8),rgba(212,168,67,.5),transparent);}
+    .c-botline{position:absolute;bottom:clamp(64px,11%,110px);left:clamp(18px,3%,32px);right:clamp(18px,3%,32px);height:1px;background:linear-gradient(90deg,transparent,rgba(212,168,67,.5),rgba(212,168,67,.8),rgba(212,168,67,.5),transparent);}
+    .c-badge-l,.c-badge-r{position:absolute;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;align-items:center;gap:4px;}
+    .c-badge-l{left:clamp(22px,4%,48px);}
+    .c-badge-r{right:clamp(22px,4%,48px);}
+    .badge-circle{width:clamp(50px,7vw,80px);height:clamp(50px,7vw,80px);border-radius:50%;background:radial-gradient(circle,#c49030,#8a6010);border:clamp(2px,0.3vw,3px) solid var(--gold3);display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 0 16px rgba(212,168,67,.4),inset 0 1px 0 rgba(255,240,200,.3);position:relative;}
+    .badge-circle::before{content:'';position:absolute;inset:4px;border-radius:50%;border:1px solid rgba(255,240,200,.3);}
+    .badge-star{font-size:clamp(.7rem,1.5vw,1.1rem);line-height:1;}
+    .badge-text{font-family:'Montserrat',sans-serif;font-size:clamp(.25rem,.5vw,.4rem);font-weight:800;color:rgba(255,245,200,.9);letter-spacing:1px;text-transform:uppercase;text-align:center;line-height:1.2;}
+    .badge-ribbon{width:clamp(36px,5.5vw,62px);height:clamp(10px,1.8vw,18px);background:linear-gradient(135deg,#c49030,#8a6010);clip-path:polygon(0 0,100% 0,100% 70%,50% 100%,0 70%);margin-top:-3px;}
+
+    /* CERTIFICATE BODY — FONTS BADE */
+    .c-body{position:absolute;top:clamp(16px,2.5%,28px);bottom:clamp(16px,2.5%,28px);left:clamp(100px,14%,180px);right:clamp(100px,14%,180px);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:clamp(10px,2%,24px) 0;}
+    .c-logo-row{display:flex;align-items:center;gap:8px;margin-bottom:clamp(8px,1.5%,16px);}
+    .c-logo-icon{font-size:clamp(1rem,1.8vw,1.5rem);}
+    /* LOGO NAME: BADA KIYA */
+    .c-logo-name{font-family:'Orbitron',sans-serif;font-size:clamp(.5rem,1vw,.78rem);font-weight:800;color:rgba(212,168,67,.7);letter-spacing:2px;text-transform:uppercase;}
+    /* MAIN TITLE: BADA KIYA */
+    .c-main-title{font-family:'Cinzel',serif;font-size:clamp(2.2rem,6vw,5.8rem);font-weight:900;color:#ffffff;letter-spacing:clamp(5px,1.2vw,16px);line-height:1;text-shadow:0 0 40px rgba(212,168,67,.2);}
+    /* SUB TITLE: BADA KIYA */
+    .c-sub-title{font-family:'Montserrat',sans-serif;font-size:clamp(.65rem,1.5vw,1.2rem);font-weight:600;color:var(--gold);letter-spacing:clamp(4px,1vw,10px);text-transform:uppercase;margin-top:clamp(2px,.5%,6px);}
+    .c-rule{width:85%;margin:clamp(6px,1.2%,14px) 0;display:flex;align-items:center;gap:10px;}
+    .c-rule::before,.c-rule::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(212,168,67,.6),transparent);}
+    .c-rule-gem{width:clamp(5px,.8vw,8px);height:clamp(5px,.8vw,8px);background:var(--gold);transform:rotate(45deg);flex-shrink:0;box-shadow:0 0 8px rgba(212,168,67,.6);}
+    /* PRESENTED TEXT: BADA KIYA */
+    .c-presented{font-family:'Montserrat',sans-serif;font-size:clamp(.55rem,1.05vw,.88rem);font-weight:600;color:rgba(232,224,208,.7);letter-spacing:clamp(2px,.6vw,6px);text-transform:uppercase;margin-bottom:clamp(4px,.8%,10px);}
+    .c-name-row{display:flex;align-items:baseline;gap:8px;width:95%;justify-content:center;margin-bottom:clamp(4px,.8%,10px);}
+    /* TITLE PREFIX: BADA KIYA */
+    .c-title-pfx{font-family:'Cormorant Garamond',serif;font-size:clamp(1.1rem,2.4vw,2.2rem);color:rgba(232,224,208,.8);font-style:italic;}
+    /* STUDENT NAME: BADA KIYA — SABSE IMPORTANT */
+    .c-student-name{font-family:'Great Vibes',cursive;font-size:clamp(2.2rem,6.5vw,6rem);color:#ffffff;letter-spacing:1px;text-shadow:0 0 20px rgba(212,168,67,.3);}
+    /* INFO TABLE: BADA KIYA */
+    .c-info-table{width:88%;border-collapse:collapse;margin:clamp(2px,.4%,6px) 0;}
+    .c-info-table td{padding:clamp(2px,.4%,5px) clamp(4px,1%,10px);font-family:'Montserrat',sans-serif;}
+    .c-info-lbl{font-size:clamp(.48rem,.88vw,.72rem);font-weight:700;color:var(--gold);letter-spacing:1.5px;text-transform:uppercase;white-space:nowrap;text-align:right;padding-right:clamp(6px,1%,12px)!important;}
+    .c-info-val{font-size:clamp(.55rem,1.05vw,.88rem);color:rgba(232,224,208,.9);border-bottom:1px solid rgba(212,168,67,.25);padding-bottom:2px;text-align:left;font-weight:500;}
+    /* DESC TEXT: BADA KIYA */
+    .c-desc{font-family:'Cormorant Garamond',serif;font-size:clamp(.52rem,1vw,.8rem);color:rgba(168,152,144,.8);text-align:center;max-width:85%;line-height:1.55;margin:clamp(4px,.8%,10px) 0;font-style:italic;}
+    .c-sig-row{display:flex;justify-content:space-around;align-items:flex-end;width:90%;margin-top:clamp(4px,.8%,10px);}
+    .c-sig{text-align:center;}
+    .c-sig-line{width:clamp(80px,14vw,160px);height:1px;background:rgba(212,168,67,.5);margin:0 auto clamp(2px,.4%,5px);}
+    /* SIG NAMES: BADE KIYE */
+    .c-sig-name{font-family:'Montserrat',sans-serif;font-size:clamp(.48rem,.85vw,.7rem);font-weight:700;color:rgba(232,224,208,.8);letter-spacing:1px;text-transform:uppercase;}
+    .c-sig-role{font-size:clamp(.38rem,.68vw,.56rem);color:rgba(212,168,67,.7);margin-top:2px;font-family:'Montserrat',sans-serif;letter-spacing:.5px;}
+    .c-sig-date{font-family:'Cormorant Garamond',serif;font-size:clamp(.46rem,.85vw,.68rem);color:rgba(168,152,144,.7);font-style:italic;}
+    .c-serial{position:absolute;bottom:clamp(8px,1.2%,14px);right:clamp(28px,4%,54px);font-family:'Montserrat',sans-serif;font-size:clamp(.32rem,.55vw,.44rem);color:rgba(212,168,67,.4);letter-spacing:2px;font-weight:600;}
+
+    @media print{
+      body,#certPage,#certPage.active{background:#060810!important;}
+      .cert-toolbar{display:none!important;}
+      .certificate{box-shadow:none!important;max-width:100%;}
+      .page.active{padding:10px!important;}
+    }
+    @media(max-width:480px){
+      .form-card{padding:22px 16px;}
+      .q-card{padding:22px 16px;}
+      .res-card{padding:32px 16px;}
+      .field-row{grid-template-columns:1fr;}
+      .c-name-row{flex-wrap:wrap;}
+    }
+    @media(max-height:640px){
+      .page.active{padding:20px 10px;}
+      .reg-hero{margin-bottom:15px;}
+    }
+  </style>
+</head>
+<body oncontextmenu="return false;" onkeydown="return disableDevTools(event)">
+
+<canvas id="starCanvas"></canvas>
+<div class="orb o1"></div>
+<div class="orb o2"></div>
+
+<!-- REGISTRATION PAGE -->
+<div class="page active" id="regPage">
+  <div class="reg-wrap">
+    <div class="reg-hero">
+      <div class="reg-badge-row">
+        <div class="reg-hex">⚡</div>
+        <div class="reg-brand">
+          <div class="reg-brand-name">THECODESPARK</div>
+          <div class="reg-brand-sub">Technologies Private Limited</div>
+        </div>
+      </div>
+      <div class="gold-line"><div class="gold-line-gem"></div></div>
+      <div class="reg-title">Certificate of <span>Excellence</span></div>
+      <div class="reg-sub">Complete the assessment. Earn your premium certificate.</div>
+    </div>
+
+    <div class="form-card">
+      <div class="fc-header">
+        <div class="fc-steps">
+          <div class="fc-step on">01</div>
+          <div class="fc-step-line"></div>
+          <div class="fc-step">02</div>
+          <div class="fc-step-line"></div>
+          <div class="fc-step">03</div>
+        </div>
+        <div class="fc-title">Student Registration</div>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label>👤 Title</label>
+          <select id="titleSelect">
+            <option value="Mr.">Mr.</option>
+            <option value="Ms.">Ms.</option>
+            <option value="Mrs.">Mrs.</option>
+            <option value="Dr.">Dr.</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>✍️ Full Name</label>
+          <input type="text" id="studentName" placeholder="Your full name" autocomplete="off"/>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>🏛️ Branch / Department</label>
+        <select id="branchSelect">
+          <option value="">— Select your branch —</option>
+          <option value="Computer Science Engineering (CSE)">Computer Science Engineering (CSE)</option>
+          <option value="Information Technology (IT)">Information Technology (IT)</option>
+          <option value="Electronics & Communication (ECE)">Electronics & Communication (ECE)</option>
+          <option value="Electrical Engineering (EE)">Electrical Engineering (EE)</option>
+          <option value="Mechanical Engineering (ME)">Mechanical Engineering (ME)</option>
+          <option value="Civil Engineering (CE)">Civil Engineering (CE)</option>
+          <option value="Artificial Intelligence & Data Science (AIDS)">AI & Data Science (AIDS)</option>
+          <option value="Artificial Intelligence & Machine Learning (AIML)">AI & Machine Learning (AIML)</option>
+          <option value="Computer Science & Business Systems (CSBS)">CS & Business Systems (CSBS)</option>
+          <option value="Internet of Things (IoT)">Internet of Things (IoT)</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>💻 Workshop / Course</label>
+        <select id="programLang">
+          <option value="">— Select your course —</option>
+          <option value="Python Programming Workshop">Python Programming Workshop</option>
+          <option value="Web Development Workshop">Web Development (HTML, CSS & JS)</option>
+          <option value="Java Fundamentals Workshop">Java Fundamentals Workshop</option>
+          <option value="C++ Programming Workshop">C++ Programming Workshop</option>
+          <option value="React.js Development Workshop">React.js Development Workshop</option>
+          <option value="Data Science with Python Workshop">Data Science with Python Workshop</option>
+          <option value="Android App Development Workshop">Android App Development Workshop</option>
+          <option value="Full Stack Development Workshop">Full Stack Development Workshop</option>
+          <option value="AutoCAD Workshop">AutoCAD Workshop</option>
+        </select>
+      </div>
+
+      <button class="btn-start" onclick="startQuiz()">BEGIN ASSESSMENT →</button>
+    </div>
+
+    <div class="reg-pills">
+      <div class="pill">50 Questions</div>
+      <div class="pill">Instant Certificate</div>
+      <div class="pill">Printable PDF</div>
+      <div class="pill">Industry Recognized</div>
+    </div>
+  </div>
+</div>
+
+<!-- QUIZ PAGE -->
+<div class="page" id="quizPage">
+  <div class="quiz-wrap">
+    <div class="quiz-bar">
+      <div class="qb-info">Q <span id="qNum">1</span> / <span id="qTotal">50</span></div>
+      <div class="qb-info" id="qCourseName" style="font-size:.65rem;opacity:.7;"></div>
+      <div class="qb-score">⚡ Score: <span id="currentScore">0</span></div>
+    </div>
+    <div class="prog-track"><div class="prog-fill" id="progressFill" style="width:0%"></div></div>
+    <div class="q-card">
+      <div class="q-num-label" id="qNumLabel">QUESTION 01</div>
+      <div class="q-text" id="questionText"></div>
+      <div class="opts" id="optsContainer"></div>
+      <button class="next-btn" id="nextBtn" style="display:none;" onclick="nextQ()">NEXT →</button>
+      <div style="clear:both;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- RESULT PAGE -->
+<div class="page" id="resultPage">
+  <div class="res-wrap">
+    <div class="res-card">
+      <div class="ring-wrap">
+        <svg class="ring-svg" width="160" height="160" viewBox="0 0 160 160">
+          <circle cx="80" cy="80" r="64" fill="none" stroke="rgba(212,168,67,0.12)" stroke-width="8"/>
+          <circle id="scoreArc" cx="80" cy="80" r="64" fill="none" stroke="url(#gGrad)" stroke-width="8" stroke-linecap="round" stroke-dasharray="402" stroke-dashoffset="402"/>
+          <defs><linearGradient id="gGrad" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" style="stop-color:#8a6010"/><stop offset="100%" style="stop-color:#f0c860"/></linearGradient></defs>
+        </svg>
+        <div class="ring-inner">
+          <div class="ring-num" id="finalScore">0</div>
+          <div class="ring-den" id="finalTotal">/50</div>
+        </div>
+      </div>
+      <div class="res-title" id="resultTitle">Outstanding!</div>
+      <div class="res-msg" id="resultMsg">Excellent performance!</div>
+      <div class="res-stats">
+        <div><div class="stat-v" id="sCorrect">0</div><div class="stat-l">Correct</div></div>
+        <div><div class="stat-v" id="sWrong">0</div><div class="stat-l">Wrong</div></div>
+        <div><div class="stat-v" id="sPct">0%</div><div class="stat-l">Accuracy</div></div>
+      </div>
+      <div class="res-btns">
+        <button class="btn-outline2" onclick="retryQuiz()">↺ RETRY</button>
+        <button class="btn-start" style="flex:2;margin-top:0;" onclick="generateCert()">🏆 GET CERTIFICATE</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CERTIFICATE PAGE -->
+<div class="page" id="certPage">
+  <div class="cert-toolbar">
+    <button class="ctb ctb-out" onclick="window.print()">🖨️ PRINT</button>
+    <button class="ctb ctb-gold" onclick="showPage('regPage')">← NEW CERTIFICATE</button>
+  </div>
+
+  <div class="certificate" id="certificate">
+    <div class="c-base"></div>
+    <div class="c-panel-tl"></div>
+    <div class="c-panel-tl2"></div>
+    <div class="c-panel-tl3"></div>
+    <div class="c-panel-br"></div>
+    <div class="c-panel-br2"></div>
+    <div class="c-panel-br3"></div>
+    <div class="c-dots-tr"><svg class="dots-svg" viewBox="0 0 300 300"></svg></div>
+    <div class="c-dots-bl"><svg class="dots-svg" viewBox="0 0 300 300"></svg></div>
+    <div class="c-border"></div>
+    <div class="c-border2"></div>
+    <div class="c-topline"></div>
+    <div class="c-botline"></div>
+    <div class="c-badge-l"><div class="badge-circle"><div class="badge-star">★</div><div class="badge-text">BEST<br>AWARD</div></div><div class="badge-ribbon"></div></div>
+    <div class="c-badge-r"><div class="badge-circle"><div class="badge-star">★</div><div class="badge-text">BEST<br>AWARD</div></div><div class="badge-ribbon"></div></div>
+    <div class="c-body">
+      <div class="c-logo-row"><span class="c-logo-icon">⚡</span><span class="c-logo-name">TheCodeSpark Technologies Pvt. Ltd.</span></div>
+      <div class="c-main-title">CERTIFICATE</div>
+      <div class="c-sub-title">of Achievement</div>
+      <div class="c-rule"><div class="c-rule-gem"></div></div>
+      <div class="c-presented">This Certificate is Proudly Presented To</div>
+      <div class="c-name-row"><span class="c-title-pfx" id="certTitlePfx">Mr.</span><span class="c-student-name" id="certName">Student Name</span></div>
+      <table class="c-info-table">
+        <tr><td class="c-info-lbl">Branch</td><td class="c-info-val" id="certBranch">Department</td></tr>
+        <tr><td class="c-info-lbl">Workshop</td><td class="c-info-val" id="certLang">Course Name</td></tr>
+        <tr><td class="c-info-lbl">Performance</td><td class="c-info-val" id="certScore">50/50 · 100%</td></tr>
+        <tr><td class="c-info-lbl">Organized by</td><td class="c-info-val">TheCodeSpark Technologies Pvt. Ltd.</td></tr>
+      </table>
+      <div class="c-desc">This certificate recognizes the outstanding dedication, intellectual curiosity and technical skill demonstrated by the above participant. TheCodeSpark Technologies is committed to empowering the next generation of technology leaders through hands-on, industry-aligned training.</div>
+      <div class="c-sig-row">
+        <div class="c-sig"><div class="c-sig-line"></div><div class="c-sig-name">Rohit Kashyap</div><div class="c-sig-role">Workshop Manager</div></div>
+        <div class="c-sig"><div class="c-sig-line"></div><div class="c-sig-name" id="certDateField">Date: ——————</div><div class="c-sig-role">Date of Issue</div></div>
+        <div class="c-sig"><div class="c-sig-line"></div><div class="c-sig-name">Academic Council</div><div class="c-sig-role">Curriculum Director</div></div>
+      </div>
+    </div>
+    <div class="c-serial" id="certSerial">CERT/TCS/2026/00000</div>
+  </div>
+</div>
+
+<script>
+  function disableDevTools(e) {
+    const key = e.keyCode || e.which;
+    if (key === 123) { e.preventDefault(); return false; }
+    if (e.ctrlKey && e.shiftKey && (key === 73 || key === 74 || key === 67)) { e.preventDefault(); return false; }
+    if (e.ctrlKey && key === 85) { e.preventDefault(); return false; }
+    if (e.ctrlKey && e.shiftKey && key === 46) { e.preventDefault(); return false; }
+    return true;
+  }
+  setInterval(function(){ var start = new Date(); debugger; var end = new Date(); }, 4000);
+
+  (function(){
+    const cv=document.getElementById('starCanvas'),ctx=cv.getContext('2d');
+    let W,H,stars=[];
+    function rs(){W=cv.width=innerWidth;H=cv.height=innerHeight;stars=[];}
+    function mk(){return{x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.4+.2,o:Math.random(),s:Math.random()*.012+.002,d:Math.random()>.5?1:-1};}
+    function init(){rs();for(let i=0;i<180;i++)stars.push(mk());}
+    function draw(){
+      ctx.clearRect(0,0,W,H);
+      stars.forEach(s=>{s.o+=s.s*s.d;if(s.o>1||s.o<0)s.d*=-1;ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fillStyle=`rgba(212,180,100,${s.o*.6})`;ctx.fill();});
+      requestAnimationFrame(draw);
+    }
+    addEventListener('resize',rs);init();draw();
+  })();
+
+  function buildDots(){
+    const svgs=document.querySelectorAll('.c-dots-tr svg, .c-dots-bl svg');
+    svgs.forEach((svg,si)=>{
+      const g=document.createElementNS('http://www.w3.org/2000/svg','g');
+      const rows=14,cols=14,spacing=22;
+      for(let r=0;r<rows;r++){
+        for(let c=0;c<cols;c++){
+          const cx=si===0?260-c*spacing:40+c*spacing;
+          const cy=si===0?40+r*spacing:260-r*spacing;
+          const dist=Math.sqrt(Math.pow(c,2)+Math.pow(r,2));
+          const maxD=Math.sqrt(2)*13;
+          const t=1-dist/maxD;
+          const radius=Math.max(.8,3.5*t);
+          const circle=document.createElementNS('http://www.w3.org/2000/svg','circle');
+          circle.setAttribute('cx',cx);circle.setAttribute('cy',cy);
+          circle.setAttribute('r',radius);circle.setAttribute('fill','#d4a843');
+          circle.setAttribute('opacity',(t*.8+.05).toFixed(2));
+          g.appendChild(circle);
+        }
+      }
+      svg.appendChild(g);
+    });
+  }
+  buildDots();
+
+  /* ================= QUESTION BANK ================= */
+  const QB = {
+    "Python Programming Workshop":[
+      {q:"What is the correct file extension for Python files?",opts:[".py",".python",".pt",".pyt"],ans:0},
+      {q:"Which keyword defines a function in Python?",opts:["function","define","func","def"],ans:3},
+      {q:"What does the `len()` function return?",opts:["Last element","Memory size","Number of lines","Length of a string/collection"],ans:3},
+      {q:"Which of these is a Python list?",opts:["(1,2,3)","{1:2,3:4}","[1,2,3]","{1,2,3}"],ans:2},
+      {q:"What is the output of `print(2**3)`?",opts:["9","6","5","8"],ans:3},
+      {q:"Which method adds an element at the end of a list?",opts:["push()","add()","append()","insert()"],ans:2},
+      {q:"A tuple in Python is:",opts:["A dictionary type","Mutable sequence","A set type","Immutable ordered sequence"],ans:3},
+      {q:"Which loop does NOT exist in Python?",opts:["while","do-while","for","None of above"],ans:1},
+      {q:"The `//` operator performs:",opts:["Power","Modulus","Division","Floor division"],ans:3},
+      {q:"Which keyword handles exceptions?",opts:["catch","handle","error","except"],ans:3},
+      {q:"A dictionary in Python is created with:",opts:["dict=[]","dict=()","dict={}","dict=<>"],ans:2},
+      {q:"What does `type(3.14)` return?",opts:["number","int","double","<class 'float'>"],ans:3},
+      {q:"Which converts a string to integer?",opts:["parse()","convert()","float()","int()"],ans:3},
+      {q:"`range(5)` generates numbers from:",opts:["1 to 5","0 to 5","1 to 4","0 to 4"],ans:3},
+      {q:"How are comments written in Python?",opts:["//","--","/*","#"],ans:3},
+      {q:"Slicing in Python means:",opts:["Sorting elements","Copying list","Deleting elements","Accessing a subset of a sequence"],ans:3},
+      {q:"Which function returns the maximum value?",opts:["top()","greatest()","max()","maximum()"],ans:2},
+      {q:"`None` in Python represents:",opts:["Zero","Empty string","False","Null/absence of value"],ans:3},
+      {q:"Which module generates random numbers?",opts:["os","numpy","math","random"],ans:3},
+      {q:"List comprehension is used to:",opts:["Remove duplicates","Reverse a list","Sort a list","Create lists concisely"],ans:3},
+      {q:"What does `strip()` do to a string?",opts:["Reverses it","Converts to uppercase","Splits it","Removes leading/trailing whitespace"],ans:3},
+      {q:"Which keyword exits a loop immediately?",opts:["stop","end","exit","break"],ans:3},
+      {q:"`print('Hello'[1])` outputs:",opts:["H","He","l","e"],ans:3},
+      {q:"`isinstance(x, int)` checks:",opts:["Converts x","Imports module","Checks value","Whether x is an instance of int"],ans:3},
+      {q:"Which function opens a file?",opts:["load()","read()","file()","open()"],ans:3},
+      {q:"The `pass` statement:",opts:["Passes value","Skips iteration","Exits program","Does nothing; placeholder"],ans:3},
+      {q:"`*args` allows a function to accept:",opts:["Import alias","Pointer argument","Keyword arguments","Variable number of positional args"],ans:3},
+      {q:"`sorted()` returns:",opts:["None","Sorted tuple","In-place sort","A new sorted list"],ans:3},
+      {q:"`lambda` in Python creates:",opts:["Loop construct","Exception handler","Class decorator","Anonymous one-line function"],ans:3},
+      {q:"Which removes and returns the last list element?",opts:["clear()","delete()","remove()","pop()"],ans:3},
+      {q:"PEP 8 is:",opts:["Built-in library","Error type","Python version 8","Python's official style guide"],ans:3},
+      {q:"`enumerate()` returns:",opts:["Removes duplicates","Counts elements","Sorts list","Index-value pairs"],ans:3},
+      {q:"An empty set is created with:",opts:["[]","()","{}","set()"],ans:3},
+      {q:"`zip()` is used to:",opts:["Compress files","Merge dicts","Sort lists","Aggregate elements from multiple iterables"],ans:3},
+      {q:"A generator function uses:",opts:["return","pass","break","yield"],ans:3},
+      {q:"`__init__` in a class:",opts:["Creates loop","Imports module","Deletes object","Initializes a new object"],ans:3},
+      {q:"Inheritance in Python uses:",opts:["inherits keyword","super keyword","extends keyword","Parent class in parentheses"],ans:3},
+      {q:"`map(func, iterable)` applies func:",opts:["Filters items","Sorts items","Creates dict","To every item in iterable"],ans:3},
+      {q:"`filter()` returns items where:",opts:["Maps items","Sorts items","All items","The function returns True"],ans:3},
+      {q:"`self` in a class method refers to:",opts:["Module name","Constructor name","Static method","Current instance"],ans:3},
+      {q:"`bool(0)` evaluates to:",opts:["None","0","True","False"],ans:3},
+      {q:"The `is` operator checks:",opts:["Value equality","Inequality","Type","Object identity"],ans:3},
+      {q:"`dict.keys()` returns:",opts:["Tuple of pairs","Set of keys","List of values","A view of all keys"],ans:3},
+      {q:"The `finally` block:",opts:["Retries code","Skips errors","Catches errors only","Runs regardless of exception"],ans:3},
+      {q:"`'py' * 3` produces:",opts:["Error","py py py","py3","pypypy"],ans:3},
+      {q:"User input is read with:",opts:["get()","read()","scan()","input()"],ans:3},
+      {q:"`import` statement:",opts:["Renames module","Deletes module","Creates module","Loads external module"],ans:3},
+      {q:"A decorator in Python:",opts:["Data type","Loop type","Comment","Modifies another function"],ans:3},
+      {q:"`__str__` method returns:",opts:["Number","Deletes object","Compares objects","Human-readable string of object"],ans:3},
+      {q:"List is mutable; tuple is:",opts:["Also mutable","A dictionary","A set","Immutable"],ans:3},
+      {q:"Standard data visualization library in Python:",opts:["scipy","numpy","pandas","matplotlib"],ans:3},
+    ],
+    "Web Development Workshop":[
+      {q:"HTML stands for:",opts:["HighText Markup Level","HyperText Machine Language","High Text Machine Language","HyperText Markup Language"],ans:3},
+      {q:"A hyperlink in HTML uses tag:",opts:["<href>","<url>","<link>","<a>"],ans:3},
+      {q:"CSS property for text color:",opts:["foreground","text-color","font-color","color"],ans:3},
+      {q:"DOM stands for:",opts:["Display Object Management","Document Order Model","Data Object Method","Document Object Model"],ans:3},
+      {q:"Select element by id in JS:",opts:["findId()","selectById()","getElement()","getElementById()"],ans:3},
+      {q:"JavaScript goes inside:",opts:["<code>","<js>","<javascript>","<script>"],ans:3},
+      {q:"CSS Flexbox is for:",opts:["Font styling","Color management","Animation","Flexible layouts"],ans:3},
+      {q:"`console.log()` in JavaScript:",opts:["Saves variable","Logs to file","Creates alert","Prints to browser console"],ans:3},
+      {q:"CSS property for rounded corners:",opts:["round-corner","border-curve","corner-radius","border-radius"],ans:3},
+      {q:"Largest HTML heading tag:",opts:["<heading>","<head>","<h6>","<h1>"],ans:3},
+      {q:"CSS Box Model includes:",opts:["Layout grid","Color scheme","3D model","Content, padding, border, margin"],ans:3},
+      {q:"Unique HTML element identifier attribute:",opts:["key","name","class","id"],ans:3},
+      {q:"In JS, `===` means:",opts:["Not equal","Value only","Assignment","Strict equality (value + type)"],ans:3},
+      {q:"Unordered list HTML tag:",opts:["<list>","<li>","<ol>","<ul>"],ans:3},
+      {q:"A JS event listener:",opts:["Database method","HTML attribute","CSS property","Function responding to DOM events"],ans:3},
+      {q:"`position: absolute` in CSS:",opts:["Relative to viewport","Fixed to screen","Relative to parent","Positioned relative to nearest ancestor"],ans:3},
+      {q:"HTML tag for embedding image:",opts:["<photo>","<image>","<picture>","<img>"],ans:3},
+      {q:"A CSS selector is:",opts:["CSS variable","HTML attribute","JS function","Pattern matching HTML elements"],ans:3},
+      {q:"`async/await` is used for:",opts:["Defining classes","Creating objects","Looping","Handling async operations"],ans:3},
+      {q:"HTML5 tag for video:",opts:["<movie>","<play>","<media>","<video>"],ans:3},
+      {q:"`localStorage` in JS:",opts:["Cookies","Temp memory","Server storage","Persists data in browser"],ans:3},
+      {q:"CSS Grid creates:",opts:["Color management","Typography","Animations","2D page layouts"],ans:3},
+      {q:"Meta tag for responsive design:",opts:["author","description","charset","viewport"],ans:3},
+      {q:"JSON stands for:",opts:["Java Scripting Object","JavaScript Online Network","Java Object Notation","JavaScript Object Notation"],ans:3},
+      {q:"`fetch()` API is used to:",opts:["Import modules","Load CSS","Fetch DOM elements","Make HTTP requests"],ans:3},
+      {q:"HTML tag for a table:",opts:["<tr>","<tab>","<grid>","<table>"],ans:3},
+      {q:"`z-index` controls:",opts:["Border width","Zoom level","Font size","Stacking order of elements"],ans:3},
+      {q:"`querySelector()` returns:",opts:["Deletes element","Creates element","All matching elements","First matching element"],ans:3},
+      {q:"CSS pseudo-class `:hover` styles:",opts:["Inline style","Animation class","Fake class","Element on hover state"],ans:3},
+      {q:"JS method to add to end of array:",opts:["insert()","add()","append()","push()"],ans:3},
+      {q:"`innerHTML` in JS:",opts:["Get event type","Get element ID","Get CSS","Gets/sets HTML content"],ans:3},
+      {q:"`display: none` in CSS:",opts:["Shrinks element","Moves element","Transparent","Hides and removes from layout"],ans:3},
+      {q:"Event that fires when page fully loads:",opts:["onready","onopen","onstart","onload"],ans:3},
+      {q:"CSS variables use prefix:",opts:["Media query syntax","Keyframe syntax","JS variable syntax","-- (double dash)"],ans:3},
+      {q:"`preventDefault()` stops:",opts:["Disables scripts","Prevents CSS","Prevents page load","Default browser action"],ans:3},
+      {q:"Bootstrap is a:",opts:["Server language","Database tool","JS framework","CSS responsive framework"],ans:3},
+      {q:"`typeof` returns:",opts:["Compares values","Converts type","Checks value","Data type as string"],ans:3},
+      {q:"HTML5 semantic navigation tag:",opts:["<header>","<menu>","<links>","<nav>"],ans:3},
+      {q:"`overflow: hidden` in CSS:",opts:["Removes margin","Adds scrollbar","Hides element","Clips overflowing content"],ans:3},
+      {q:"A callback in JavaScript is:",opts:["Error type","Loop type","Return value","Function passed to another function"],ans:3},
+      {q:"`opacity: 0` makes element:",opts:["Shrinks","Deletes","Removed from layout","Invisible but occupies space"],ans:3},
+      {q:"Purpose of `<header>` HTML5 tag:",opts:["Same as h1","Styles heading","Title only","Introductory/navigational content"],ans:3},
+      {q:"Array `.map()` returns:",opts:["Sorts array","Filters elements","New object","New array with transformed elements"],ans:3},
+      {q:"CORS stands for:",opts:["Client Object Response","Code Review System","CSS styling","Cross-Origin Resource Sharing"],ans:3},
+      {q:"`git commit` does:",opts:["Merges code","Creates branch","Uploads","Saves snapshot of changes"],ans:3},
+      {q:"CSS file linked in HTML via:",opts:["<style>","<link>","<a>","<link rel='stylesheet' href='...'>"],ans:3},
+      {q:"A Promise represents:",opts:["Class method","Loop construct","Guaranteed value","Future async result"],ans:3},
+      {q:"`transform: scale(2)` in CSS:",opts:["Fades element","Rotates element","Moves element","Doubles rendered size"],ans:3},
+      {q:"Semantic HTML means:",opts:["Mobile HTML","Fast HTML","Styled HTML","Tags describing content meaning"],ans:3},
+      {q:"Debouncing in JS means:",opts:["Loop optimization","Animation","Removing bugs","Delays execution until pause"],ans:3},
+      {q:"Array `.filter()` returns:",opts:["Removes all","Maps values","Sorts array","Elements passing a condition"],ans:3},
+    ],
+    "Java Fundamentals Workshop":[
+      {q:"Java is primarily:",opts:["Machine level","Functional only","Procedural","Object-Oriented language"],ans:3},
+      {q:"Object instantiation in Java uses:",opts:["make","object","create","new keyword"],ans:3},
+      {q:"JVM stands for:",opts:["Java Variable Manager","Java Verification Module","Java Visual Machine","Java Virtual Machine"],ans:3},
+      {q:"Decimal values in Java are stored as:",opts:["boolean","char","int","double"],ans:3},
+      {q:"Java application entry point:",opts:["init()","run()","start()","main() method"],ans:3},
+      {q:"`System.out.println()` does:",opts:["Declares class","Creates variable","Reads input","Prints with newline"],ans:3},
+      {q:"Keyword for class inheritance:",opts:["super","implements","inherits","extends"],ans:3},
+      {q:"Encapsulation in OOP means:",opts:["Overloading","Multiple forms","Inheriting","Bundling data and hiding details"],ans:3},
+      {q:"Loop that always runs once:",opts:["foreach","while","for","do-while"],ans:3},
+      {q:"Java interface is:",opts:["Loop type","Data structure","Concrete class","Contract of method signatures"],ans:3},
+      {q:"Exception on null access:",opts:["VoidException","ClassException","ArrayException","NullPointerException"],ans:3},
+      {q:"`final` keyword:",opts:["Imports library","Ends method","Creates loop","Prevents modification/inheritance"],ans:3},
+      {q:"Collection allowing duplicates:",opts:["TreeSet","HashSet","Set","ArrayList"],ans:3},
+      {q:"Method overloading means:",opts:["Removing method","Hiding method","Different name same params","Same name different parameters"],ans:3},
+      {q:"Exception handling in Java:",opts:["except","error","catch only","try-catch-finally"],ans:3},
+      {q:"Constructor in Java:",opts:["Abstract method","Static method","Destroys object","Initializes a new object"],ans:3},
+      {q:"Most restrictive access modifier:",opts:["default","protected","public","private"],ans:3},
+      {q:"Polymorphism allows:",opts:["Data hiding","Multiple inheritance","One class many objects","One interface many forms"],ans:3},
+      {q:"Auto-imported package in Java:",opts:["java.net","java.io","java.util","java.lang"],ans:3},
+      {q:"`static` member belongs to:",opts:["Is abstract","Cannot change","The instance","The class itself"],ans:3},
+      {q:"Abstract class in Java:",opts:["Derived class only","Private members only","No methods","Cannot be instantiated"],ans:3},
+      {q:"`super` keyword refers to:",opts:["Ends class","Makes static","Creates object","Parent class"],ans:3},
+      {q:"Thread-safe Java collection:",opts:["LinkedList","HashMap","ArrayList","Vector"],ans:3},
+      {q:"Autoboxing converts:",opts:["Auto sort","Auto import","Manages memory","Primitive to wrapper class"],ans:3},
+      {q:"`StringBuilder` is for:",opts:["Sorts string","Formats string","String array","Efficient mutable strings"],ans:3},
+      {q:"`throws` keyword declares:",opts:["Creates exception","Handles exception","Throws object","Exceptions method may propagate"],ans:3},
+      {q:"Java Generics provide:",opts:["Inheritance type","Memory tool","Old version","Type-safe reusable code"],ans:3},
+      {q:"Keyword preventing override:",opts:["synchronized","abstract","static","final"],ans:3},
+      {q:"Lambda expression is:",opts:["Exception type","Loop type","Variable type","Concise anonymous function"],ans:3},
+      {q:"`HashMap` stores:",opts:["Unique values only","Sorted pairs","Values only","Unordered key-value pairs"],ans:3},
+      {q:"`Iterator` is used to:",opts:["Delete collection","Search elements","Sort collection","Traverse elements"],ans:3},
+      {q:"Method overriding means:",opts:["Static method","Overloading","Same class same method","Redefining parent method in child"],ans:3},
+      {q:"`this` keyword refers to:",opts:["Static reference","Calls parent","Creates new object","Current object instance"],ans:3},
+      {q:"`instanceof` checks:",opts:["Deletes instance","Counts instances","Creates instance","If object is of given type"],ans:3},
+      {q:"Checked exception is:",opts:["System error","Runtime error","Caught at runtime","Must be handled at compile time"],ans:3},
+      {q:"Size of `int` in Java:",opts:["Depends on OS","8 bytes","2 bytes","4 bytes"],ans:3},
+      {q:"Java `String` is:",opts:["Keyword","Mutable char array","Primitive type","Immutable object"],ans:3},
+      {q:"`Collections.sort()` sorts in:",opts:["Shuffles","Creates copy","Reverse","Natural ascending order"],ans:3},
+      {q:"`enum` represents:",opts:["Data type alias","Loop structure","Error type","Fixed set of named constants"],ans:3},
+      {q:"Functional interface has:",opts:["Nested interface","Static interface","Many abstract methods","Exactly one abstract method"],ans:3},
+      {q:"Java 8 Stream API allows:",opts:["Thread management","File streaming","Network streaming","Functional ops on collections"],ans:3},
+      {q:"Garbage collection frees:",opts:["Removes imports","Clears console","Deletes files","Unused heap memory"],ans:3},
+      {q:"Deadlock occurs when:",opts:["Null reference","Memory overflow","Infinite loop","Threads wait on each other indefinitely"],ans:3},
+      {q:"Parent of all Java classes:",opts:["Super","Base","Main","Object"],ans:3},
+      {q:"`volatile` ensures variable is:",opts:["Marks unused","Creates volatile ref","Makes constant","Always read from main memory"],ans:3},
+      {q:"`try-with-resources`:",opts:["Creates objects","Retries code","Handles multiple exceptions","Auto-closes resources"],ans:3},
+      {q:"JDK stands for:",opts:["Java Data Kit","Java Deployment Key","Java Debug Kit","Java Development Kit"],ans:3},
+      {q:"int to String in Java:",opts:["parse()","convert()","int.toString()","String.valueOf()"],ans:3},
+      {q:"Serialization converts object to:",opts:["Compressed file","Encrypted data","Sorted form","Byte stream"],ans:3},
+      {q:"Multithreading means:",opts:["Multiple methods","Multiple classes","Multiple programs","Concurrent thread execution"],ans:3},
+      {q:"`==` vs `.equals()` for Strings:",opts:["Both compare values","== compares value","No difference","== references; .equals() content"],ans:3},
+    ],
+    "C++ Programming Workshop":[
+      {q:"C++ was designed by:",opts:["Guido van Rossum","James Gosling","Dennis Ritchie","Bjarne Stroustrup"],ans:3},
+      {q:"Standard I/O header in C++:",opts:["<io.cpp>","<input.h>","<stdio.h>","<iostream>"],ans:3},
+      {q:"`cout` is used for:",opts:["Declaring variable","Commenting","Taking input","Printing output"],ans:3},
+      {q:"Pointer is declared with:",opts:["@","#","&","*"],ans:3},
+      {q:"A `class` in C++ is:",opts:["Loop structure","Function type","Variable type","Blueprint for objects"],ans:3},
+      {q:"The `::` operator is:",opts:["Bitwise AND","Pointer access","Comparison","Scope resolution"],ans:3},
+      {q:"`const` declares:",opts:["Fixed value","Static member","Allocated memory","Non-modifiable variable"],ans:3},
+      {q:"Function overloading uses:",opts:["Nested functions","Two functions","Same return different params","Same name different params"],ans:3},
+      {q:"`new` operator in C++:",opts:["Imports library","Defines function","Creates variable","Allocates heap memory"],ans:3},
+      {q:"STL container for key-value pairs:",opts:["stack","list","vector","map"],ans:3},
+      {q:"A destructor:",opts:["Static method","Creates copy","Initializes object","Frees resources on destruction"],ans:3},
+      {q:"`virtual` keyword enables:",opts:["Blocks inheritance","Declares constant","Creates abstract class","Runtime polymorphism"],ans:3},
+      {q:"C++ template provides:",opts:["Loop type","Comment block","HTML page","Generic programming"],ans:3},
+      {q:"`->` accesses members via:",opts:["&","::","A value","A pointer"],ans:3},
+      {q:"Inheritance in C++ means:",opts:["Memory allocation","Function overloading","Copy of class","Deriving from existing class"],ans:3},
+      {q:"Default access in C++ `class`:",opts:["none","public","protected","private"],ans:3},
+      {q:"`endl` in C++:",opts:["Loops end","Reads line","Ends program","Newline + flushes buffer"],ans:3},
+      {q:"For loop provides:",opts:["goto iteration","Do-while iteration","While iteration","Count-controlled iteration"],ans:3},
+      {q:"Abstract class has at least:",opts:["Derived class only","Private members only","No methods","One pure virtual function"],ans:3},
+      {q:"`friend` function can:",opts:["Inline function","Public function","Another file function","Access private members"],ans:3},
+      {q:"LIFO STL container:",opts:["vector","deque","queue","stack"],ans:3},
+      {q:"`delete` operator:",opts:["Removes class member","Deletes file","Removes variable","Deallocates heap memory"],ans:3},
+      {q:"`cin` reads from:",opts:["File input","Error stream","Output","Standard input"],ans:3},
+      {q:"Multiple inheritance means:",opts:["Overloaded methods","Multiple constructors","Multiple objects","Inheriting from multiple bases"],ans:3},
+      {q:"Inline function:",opts:["Static function","Private function","Function in loop","Expands at call site"],ans:3},
+      {q:"`sizeof()` returns:",opts:["Array length","String length","Element count","Size in bytes"],ans:3},
+      {q:"Reference variable is:",opts:["Global variable","Constant variable","Pointer to memory","Alias for another variable"],ans:3},
+      {q:"`namespace` prevents:",opts:["Class scope","Loop scope","Memory space","Name collisions"],ans:3},
+      {q:"`static` class member is:",opts:["Always private","Only in main","Cannot change","Shared by all instances"],ans:3},
+      {q:"Operator overloading defines:",opts:["Comparison operator","Operator precedence","Using two operators","Custom behavior for operators"],ans:3},
+      {q:"STL dynamic array container:",opts:["unordered_map","map","set","vector"],ans:3},
+      {q:"`auto` in C++11:",opts:["Allocates memory","Creates auto loop","Auto variable","Compiler infers type"],ans:3},
+      {q:"Copy constructor creates:",opts:["Default constructor","Copies pointer","Copies memory","Object from existing object"],ans:3},
+      {q:"`throw` in C++:",opts:["Throws return value","Deletes pointer","Throws to function","Signals an exception"],ans:3},
+      {q:"Pure virtual function syntax:",opts:["Static virtual function","Private virtual function","Virtual with body","virtual func() = 0;"],ans:3},
+      {q:"Struct vs Class in C++:",opts:["struct no methods","Class is public","No difference","Struct defaults to public"],ans:3},
+      {q:"`this` pointer points to:",opts:["Global variable","Static member","Parent class","Current object instance"],ans:3},
+      {q:"Exception handling uses:",opts:["Debug mode","Compile errors","Input errors","try, catch, throw"],ans:3},
+      {q:"STL `vector` is:",opts:["Tree structure","Linked list","Math vector","Dynamic contiguous array"],ans:3},
+      {q:"Move semantics allow:",opts:["Static casting","Pointer arithmetic","Moving in memory","Transfer without copying"],ans:3},
+      {q:"`nullptr` is:",opts:["False boolean","Empty string","Zero value","Type-safe null pointer"],ans:3},
+      {q:"`#include` directive:",opts:["Declares variable","Creates function","Comment","Inserts header file"],ans:3},
+      {q:"Function pointer stores:",opts:["Return type pointer","Reference to function","Data pointer","Function's address"],ans:3},
+      {q:"`protected` allows access to:",opts:["friend only","Everyone","Same class only","Class and derived classes"],ans:3},
+      {q:"`std::sort()` is used to:",opts:["Merge arrays","Create sorted container","Search elements","Sort a range"],ans:3},
+      {q:"`const` after member function:",opts:["Inline","Static","Constant","Function won't modify object"],ans:3},
+      {q:"`dynamic_cast` provides:",opts:["Casting const away","Converting primitives","Compile-time conversion","Safe runtime downcasting"],ans:3},
+      {q:"Smart pointers provide:",opts:["Constant pointer","Pointer to pointer","Fast pointer","Automatic memory management"],ans:3},
+      {q:"`<algorithm>` header provides:",opts:["IO functions","Memory functions","Math functions","Sort, search algorithms"],ans:3},
+      {q:"Encapsulation in C++ means:",opts:["Template class","Virtual function","Multiple inheritance","Bundling data with methods"],ans:3},
+    ],
+
+    /* ===== AUTOCAD WORKSHOP — 50 QUESTIONS ===== */
+    "AutoCAD Workshop":[
+      {q:"AutoCAD is developed by:",opts:["Adobe Systems","Autodesk","Dassault Systèmes","PTC Inc."],ans:1},
+      {q:"The full form of CAD is:",opts:["Computer Aided Drafting","Computerized Auto Design","Computer Animated Drawing","Computer Aided Design"],ans:3},
+      {q:"The default file extension for AutoCAD drawings is:",opts:[".cad",".dxf",".acad",".dwg"],ans:3},
+      {q:"The command to UNDO the last action in AutoCAD is:",opts:["Ctrl+Z","Ctrl+Y","Ctrl+U","Ctrl+A"],ans:0},
+      {q:"Which command draws a straight line in AutoCAD?",opts:["DRAW","PLINE","SPLINE","LINE"],ans:3},
+      {q:"The CIRCLE command requires which input by default?",opts:["Two endpoints","Three points","Diameter only","Center point and radius"],ans:3},
+      {q:"TRIM command is used to:",opts:["Copy objects","Move objects","Extend objects","Remove parts of objects beyond a boundary"],ans:3},
+      {q:"EXTEND command is used to:",opts:["Scale objects","Rotate objects","Trim objects","Lengthen objects to meet a boundary"],ans:3},
+      {q:"The OFFSET command creates:",opts:["A mirror image","A scaled copy","A rotated copy","A parallel copy at a specified distance"],ans:3},
+      {q:"MIRROR command creates:",opts:["A 3D solid","An offset copy","A scaled object","A reflected copy about a mirror line"],ans:3},
+      {q:"The ARRAY command is used to:",opts:["Delete selected objects","Scale multiple objects","Rotate in 3D","Create multiple copies in a pattern"],ans:3},
+      {q:"POLAR ARRAY distributes copies:",opts:["In a grid","Along a path","Randomly","Around a center point at equal angles"],ans:3},
+      {q:"What does the MOVE command do?",opts:["Copies objects","Rotates objects","Scales objects","Relocates objects to a new position"],ans:3},
+      {q:"The ROTATE command rotates objects around:",opts:["A mirror line","The origin only","The center of the object","A specified base point"],ans:3},
+      {q:"SCALE command changes the:",opts:["Rotation angle","Position","Color","Size of an object proportionally"],ans:3},
+      {q:"The COPY command in AutoCAD:",opts:["Moves objects","Deletes duplicates","Creates a mirror","Duplicates selected objects"],ans:3},
+      {q:"FILLET command creates:",opts:["A straight chamfer","An angular cut","A sharp corner","A rounded corner between two lines"],ans:3},
+      {q:"CHAMFER command creates:",opts:["A curved corner","A mirror copy","A circular arc","An angled cut at a corner"],ans:3},
+      {q:"The HATCH command is used to:",opts:["Draw borders","Add dimensions","Apply text","Fill an area with a repeating pattern"],ans:3},
+      {q:"PEDIT command is used to edit:",opts:["Text styles","Block definitions","Single lines","Polylines"],ans:3},
+      {q:"The EXPLODE command breaks:",opts:["Deletes objects","Moves objects","Scales objects","Compound objects into individual elements"],ans:3},
+      {q:"A BLOCK in AutoCAD is:",opts:["A 3D solid","A dimension type","A hatch pattern","A reusable group of objects"],ans:3},
+      {q:"INSERT command is used to:",opts:["Import images","Add dimensions","Create new layers","Place a block into the drawing"],ans:3},
+      {q:"The WBLOCK command:",opts:["Edits a block","Rotates a block","Imports a block","Saves a block as an external DWG file"],ans:3},
+      {q:"LAYER command allows you to:",opts:["Scale objects","Apply hatches","Add text","Organize objects by properties like color and linetype"],ans:3},
+      {q:"Turning a layer OFF means:",opts:["Deletes the layer","Locks it from editing","Freezes it","Objects on that layer are hidden but still exist"],ans:3},
+      {q:"FREEZE vs OFF for layers:",opts:["Same behavior","OFF is faster","FREEZE saves drawing","FREEZE also excludes from regen; OFF only hides"],ans:3},
+      {q:"What is the ORTHO mode?",opts:["Snap to grid","Snap to objects","Enables 3D view","Restricts cursor to horizontal/vertical movement"],ans:3},
+      {q:"POLAR TRACKING helps draw lines at:",opts:["Any random angle","Only 45°","Only 90°","Specified angular increments"],ans:3},
+      {q:"Object SNAP (OSNAP) is used to:",opts:["Rotate objects","Scale precisely","Apply hatches","Snap cursor to exact points on objects"],ans:3},
+      {q:"ENDPOINT snap selects:",opts:["The grid point","The center","The midpoint","The exact end of a line or arc"],ans:3},
+      {q:"MIDPOINT snap selects:",opts:["Perpendicular point","Nearest endpoint","Center of circle","The middle of a line or arc"],ans:3},
+      {q:"The DIMENSION command adds:",opts:["Hatch patterns","Block references","Text annotations","Measurement annotations to a drawing"],ans:3},
+      {q:"LINEAR DIMENSION measures:",opts:["Angles","Arc lengths","Diameters","Horizontal or vertical distances"],ans:3},
+      {q:"ANGULAR DIMENSION measures:",opts:["Curved lengths","Radius only","Linear distance","The angle between two lines"],ans:3},
+      {q:"RADIUS DIMENSION annotates:",opts:["A linear distance","A diameter","The angle","The radius of a circle or arc"],ans:3},
+      {q:"The STYLE command in AutoCAD manages:",opts:["Hatch styles","Dimension styles","Line type styles","Text fonts and formatting"],ans:3},
+      {q:"MTEXT (Multiline Text) command:",opts:["Draws a border","Creates a block","Applies a hatch","Adds formatted paragraph text"],ans:3},
+      {q:"The PROPERTIES panel displays:",opts:["Layer manager","Command history","File explorer","Object color, linetype, layer and other attributes"],ans:3},
+      {q:"ZOOM EXTENTS fits the view to:",opts:["Selected objects","Last viewport","Current layer","All objects in the drawing"],ans:3},
+      {q:"PAN command is used to:",opts:["Zoom in/out","Rotate the view","Scale the drawing","Move the view without changing zoom level"],ans:3},
+      {q:"Model Space is used for:",opts:["Plotting only","Placing title blocks","Arranging sheets","Drawing actual geometry at real-world scale"],ans:3},
+      {q:"Paper Space (Layout) is used for:",opts:["3D modeling","Writing scripts","Editing blocks","Arranging drawing sheets for printing"],ans:3},
+      {q:"VIEWPORT in Paper Space displays:",opts:["A block reference","A file directory","A new drawing","A window into Model Space"],ans:3},
+      {q:"The PURGE command removes:",opts:["Locked layers","External references","Visible objects","Unused blocks, layers, and other definitions"],ans:3},
+      {q:"AUDIT command in AutoCAD:",opts:["Lists all commands","Exports DXF","Checks drawing units","Finds and fixes errors in the drawing database"],ans:3},
+      {q:"The UCS (User Coordinate System) defines:",opts:["Layer color rules","Plot settings","Print scale","The orientation of X, Y, Z axes"],ans:3},
+      {q:"3DORBIT command allows:",opts:["Snap in 3D","Array in 3D","Draw in 3D","Rotate the 3D view interactively"],ans:3},
+      {q:"EXTRUDE command creates:",opts:["A 2D hatch","A flat surface","A polyline copy","A 3D solid from a 2D profile"],ans:3},
+      {q:"UNION command in 3D modeling:",opts:["Splits two solids","Subtracts one solid","Mirrors a solid","Combines two solids into one"],ans:3},
+      {q:"SUBTRACT command in 3D modeling:",opts:["Copies a solid","Combines solids","Rotates a solid","Removes one solid's volume from another"],ans:3},
+    ],
+  };
+
+  const defaultQ = [
+    {q:"API stands for:",opts:["Advanced Program Interaction","Automatic Processing Input","Application Protocol Index","Application Programming Interface"],ans:3},
+    {q:"A variable is:",opts:["A function type","A fixed value","A loop","Named storage location"],ans:3},
+    {q:"Debugging means:",opts:["Creating database","Compiling","Writing code","Finding and fixing errors"],ans:3},
+    {q:"IDE stands for:",opts:["Integrated Display Engine","Interface Design Editor","Internal Data Exchange","Integrated Development Environment"],ans:3},
+    {q:"A function is:",opts:["Database table","A variable","Loop structure","Reusable block of code"],ans:3},
+    {q:"Version control tracks:",opts:["Memory management","Variables","DB versioning","Code changes over time"],ans:3},
+    {q:"A loop:",opts:["Variable type","Function call","Conditional statement","Repeatedly executes code"],ans:3},
+    {q:"Boolean values are:",opts:["Null value","String type","Number type","True or false"],ans:3},
+    {q:"Recursion means:",opts:["Memory leak","Array iteration","Loop in C","Function calling itself"],ans:3},
+    {q:"An algorithm is:",opts:["UI design","DB query","Programming language","Step-by-step problem-solving procedure"],ans:3},
+    {q:"A compiler:",opts:["Version control","Debugging tool","Code editor","Translates source to machine code"],ans:3},
+    {q:"Open source software has:",opts:["Cloud software","OS","Paid source","Publicly available source code"],ans:3},
+    {q:"A database is:",opts:["UI framework","Network protocol","Code repository","Organized collection of data"],ans:3},
+    {q:"HTTP stands for:",opts:["Home Transfer Technology","Hyperlink Text Protocol","High Transfer Text Program","HyperText Transfer Protocol"],ans:3},
+    {q:"Responsive design:",opts:["Animated design","Dark mode","Fast loading","Adapts to screen size"],ans:3},
+    {q:"Cloud computing delivers:",opts:["USB storage","Local server","Weather app","Computing services over internet"],ans:3},
+    {q:"Machine learning:",opts:["Programming language","Computer hardware","Manual teaching","AI learning from data"],ans:3},
+    {q:"An array is:",opts:["Class definition","Function type","Single variable","Collection of same-type elements"],ans:3},
+    {q:"Git is a:",opts:["Database tool","Code editor","Programming language","Distributed version control system"],ans:3},
+    {q:"A framework is:",opts:["Design pattern","Hardware component","Single library","Structured development platform"],ans:3},
+    {q:"Agile methodology is:",opts:["Deployment strategy","Testing only","Waterfall model","Iterative development approach"],ans:3},
+    {q:"An IP address is:",opts:["Server software","Website name","Internet speed","Unique device network label"],ans:3},
+    {q:"OOP stands for:",opts:["Open Output Program","Operational Output Process","Online Open Platform","Object-Oriented Programming"],ans:3},
+    {q:"Stack follows:",opts:["Sorted structure","Random access","First In First Out","Last In First Out"],ans:3},
+    {q:"Queue follows:",opts:["Priority-based only","Random access","Last In First Out","First In First Out"],ans:3},
+    {q:"SQL stands for:",opts:["Sequential Query List","System Query Layer","Simple Question Logic","Structured Query Language"],ans:3},
+    {q:"Binary search works on:",opts:["Random search","Starts from beginning","Linear search","Sorted array divide-and-conquer"],ans:3},
+    {q:"Linked list consists of:",opts:["Hash table","Sorted array","Array of links","Nodes pointing to next"],ans:3},
+    {q:"Big O notation measures:",opts:["Error type","Program output","Code quality","Algorithm complexity"],ans:3},
+    {q:"REST API uses:",opts:["Security protocol","Desktop API","DB API","HTTP methods for web communication"],ans:3},
+    {q:"Encryption:",opts:["Backs up data","Compresses data","Deletes data","Converts to unreadable format"],ans:3},
+    {q:"Binary uses:",opts:["Decimal system","Hexadecimal system","10 digits","Only digits 0 and 1"],ans:3},
+    {q:"Tree data structure is:",opts:["Circular queue","Hash table","Linear structure","Hierarchical root and children"],ans:3},
+    {q:"Operating system:",opts:["Database system","Programming language","Application software","Manages hardware and software"],ans:3},
+    {q:"CPU stands for:",opts:["Core Processing Utility","Computer Power Unit","Central Program Unit","Central Processing Unit"],ans:3},
+    {q:"RAM is:",opts:["Runtime Application Memory","Removable Memory","Read-only memory","Random Access Memory"],ans:3},
+    {q:"A web server:",opts:["Mail server","DB server","Local storage","Delivers web content to clients"],ans:3},
+    {q:"Two-factor authentication:",opts:["Backup login","Double encryption","Two passwords","Two verification methods"],ans:3},
+    {q:"DevOps combines:",opts:["DB management","Testing framework","Developer tool","Development and IT operations"],ans:3},
+    {q:"Microservice is:",opts:["Mini database","Micro-controller","Small program","Small independent deployable service"],ans:3},
+    {q:"Hash function:",opts:["Sorting algorithm","Encryption key","Password generator","Maps input to fixed output"],ans:3},
+    {q:"Docker is:",opts:["DB tool","Version control","Programming language","Containerization platform"],ans:3},
+    {q:"VPN stands for:",opts:["Vendor Platform Network","Very Public Network","Video Processing Network","Virtual Private Network"],ans:3},
+    {q:"An exception is:",opts:["Compile error","Input error only","Program end","Runtime error disrupting execution"],ans:3},
+    {q:"Inheritance in OOP:",opts:["Method overloading","Creating objects","Copying code","Acquiring properties of another class"],ans:3},
+    {q:"Merge sort is:",opts:["Selection sort","Random sorting","Bubble sort","Divide-and-conquer sorting"],ans:3},
+    {q:"Foreign key in DB:",opts:["Indexed column","Encrypted key","Same table primary key","References another table's primary key"],ans:3},
+    {q:"Unit testing tests:",opts:["Load testing","UI testing","Entire application","Individual functions in isolation"],ans:3},
+    {q:"Caching means:",opts:["Encrypting data","Backing up data","Deleting old data","Storing data for faster retrieval"],ans:3},
+    {q:"A firewall:",opts:["Network cable","Antivirus","Server hardware","Controls network traffic"],ans:3},
+  ];
+
+  /* ========= QUIZ STATE ========= */
+  let sTitle='',sName='',sBranch='',sLang='';
+  let questions=[],curQ=0,score=0;
+  const TOTAL=50;
+  const LTRS=['A','B','C','D'];
+
+  function shuffle(a){const r=[...a];for(let i=r.length-1;i>0;i--){const j=0|Math.random()*(i+1);[r[i],r[j]]=[r[j],r[i]];}return r;}
+
+  function getQs(lang){
+    const bank=QB[lang]||defaultQ;
+    let pool=shuffle([...bank]);
+    if(pool.length<TOTAL){
+      const extra=shuffle([...defaultQ]).filter(q=>!pool.some(p=>p.q===q.q));
+      pool=[...pool,...extra].slice(0,TOTAL);
+    }else pool=pool.slice(0,TOTAL);
+    return pool.map(q=>{
+      const items=q.opts.map((o,i)=>({t:o,c:i===q.ans}));
+      const sh=shuffle(items);
+      return{q:q.q,opts:sh.map(o=>o.t),ans:sh.findIndex(o=>o.c)};
+    });
+  }
+
+  function showPage(id){
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    scrollTo(0,0);
+  }
+
+  function startQuiz(){
+    sTitle=document.getElementById('titleSelect').value;
+    sName=document.getElementById('studentName').value.trim();
+    sBranch=document.getElementById('branchSelect').value;
+    sLang=document.getElementById('programLang').value;
+    if(!sName){alert('⚠️ Please enter your full name!');return;}
+    if(!sBranch){alert('⚠️ Please select your branch!');return;}
+    if(!sLang){alert('⚠️ Please select a course!');return;}
+    questions=getQs(sLang);
+    curQ=0;score=0;
+    document.getElementById('qTotal').textContent=TOTAL;
+    document.getElementById('qCourseName').textContent=sLang;
+    showPage('quizPage');
+    renderQ();
+  }
+
+  function renderQ(){
+    const q=questions[curQ];
+    const n=String(curQ+1).padStart(2,'0');
+    document.getElementById('qNum').textContent=curQ+1;
+    document.getElementById('qNumLabel').textContent='QUESTION '+n;
+    document.getElementById('currentScore').textContent=score;
+    document.getElementById('progressFill').style.width=((curQ/TOTAL)*100)+'%';
+    document.getElementById('questionText').textContent=q.q;
+    document.getElementById('nextBtn').style.display='none';
+    const con=document.getElementById('optsContainer');
+    con.innerHTML='';
+    q.opts.forEach((opt,i)=>{
+      const btn=document.createElement('button');
+      btn.className='opt';
+      btn.innerHTML=`<span class="opt-ltr">${LTRS[i]}</span>${opt}`;
+      btn.onclick=()=>pick(i,q.ans);
+      con.appendChild(btn);
+    });
+  }
+
+  function pick(sel,correct){
+    const opts=document.querySelectorAll('.opt');
+    opts.forEach(o=>o.disabled=true);
+    opts[correct].classList.add('correct');
+    if(sel!==correct)opts[sel].classList.add('wrong');
+    else score++;
+    document.getElementById('currentScore').textContent=score;
+    const nb=document.getElementById('nextBtn');
+    nb.style.display='block';
+    nb.textContent=curQ===TOTAL-1?'SEE RESULT 🎯':'NEXT →';
+  }
+
+  function nextQ(){
+    curQ++;
+    if(curQ>=TOTAL)showResult();
+    else renderQ();
+  }
+
+  function showResult(){
+    const pct=Math.round((score/TOTAL)*100);
+    document.getElementById('finalScore').textContent=score;
+    document.getElementById('finalTotal').textContent='/'+TOTAL;
+    document.getElementById('sCorrect').textContent=score;
+    document.getElementById('sWrong').textContent=TOTAL-score;
+    document.getElementById('sPct').textContent=pct+'%';
+    const circ=2*Math.PI*64;
+    const offset=circ-(circ*pct/100);
+    setTimeout(()=>{
+      const arc=document.getElementById('scoreArc');
+      arc.style.transition='stroke-dashoffset 1.3s cubic-bezier(.4,0,.2,1)';
+      arc.style.strokeDashoffset=offset;
+    },200);
+    let title,msg;
+    if(pct>=90){title='🏆 Outstanding!';msg='Exceptional mastery demonstrated. A Gold-tier certificate awaits!';}
+    else if(pct>=75){title='⭐ Highly Commendable!';msg='Excellent work! Your commitment to learning truly shines.';}
+    else if(pct>=60){title='👍 Well Done!';msg='Solid knowledge! You have earned your certificate with distinction.';}
+    else if(pct>=40){title='📚 Good Effort!';msg='Active participation recognized. Keep practicing to excel further!';}
+    else{title='💪 Keep Striving!';msg='Every journey begins with a single step. Try again for a better score!';}
+    document.getElementById('resultTitle').textContent=title;
+    document.getElementById('resultMsg').textContent=msg;
+    showPage('resultPage');
+  }
+
+  function retryQuiz(){
+    questions=getQs(sLang);curQ=0;score=0;
+    const arc=document.getElementById('scoreArc');
+    arc.style.transition='none';arc.style.strokeDashoffset='402';
+    showPage('quizPage');renderQ();
+  }
+
+  function generateCert(){
+    const pct=Math.round((score/TOTAL)*100);
+    const now=new Date();
+    const dateStr=now.toLocaleDateString('en-IN',{day:'2-digit',month:'long',year:'numeric'});
+    document.getElementById('certTitlePfx').textContent=sTitle;
+    document.getElementById('certName').textContent=sName;
+    document.getElementById('certBranch').textContent=sBranch;
+    document.getElementById('certLang').textContent=sLang;
+    document.getElementById('certScore').textContent=score+'/'+TOTAL+' · '+pct+'% Accuracy';
+    document.getElementById('certDateField').textContent=dateStr;
+    document.getElementById('certSerial').textContent='CERT/TCS/2026/'+Math.floor(10000+Math.random()*90000);
+    showPage('certPage');
+  }
+
+  document.getElementById('studentName').addEventListener('keydown',e=>{if(e.key==='Enter')startQuiz();});
+</script>
+</body>
+</html>
